@@ -6,21 +6,18 @@ use non_fungible_token::ContractContract as NftContract;
 
 fn mint_more(root: &UserAccount, nft: &ContractAccount<NftContract>) {
     helper_mint(
-        "1".to_string(),
         &root,
         &nft,
         "Black as the Night".to_string(),
         "In charcoal".to_string(),
     );
     helper_mint(
-        "2".to_string(),
         &root,
         &nft,
         "Hamakua".to_string(),
         "Vintage recording".to_string(),
     );
     helper_mint(
-        "3".to_string(),
         &root,
         &nft,
         "Aloha ke akua".to_string(),

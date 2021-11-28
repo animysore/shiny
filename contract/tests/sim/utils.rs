@@ -3,7 +3,6 @@ use near_contract_standards::non_fungible_token::metadata::TokenMetadata;
 use non_fungible_token::ContractContract as NftContract;
 use token_receiver::TokenReceiverContract;
 
-use near_contract_standards::non_fungible_token::TokenId;
 use near_sdk_sim::{call, deploy, init_simulator, to_yocto, ContractAccount, UserAccount};
 
 // Load in contract bytes at runtime
@@ -45,14 +44,14 @@ pub fn init() -> (
         signer_account: root,
         // init method
         init_method: new_default_meta(
-            root.valid_account_id()
+            root.valid_account_id(),
+            None
         )
     );
 
     call!(
         root,
         nft.nft_mint(
-            TOKEN_ID.into(),
             root.valid_account_id(),
             TokenMetadata {
                 title: Some("Olympus Mons".into()),
@@ -98,7 +97,6 @@ pub fn init() -> (
 }
 
 pub fn helper_mint(
-    token_id: TokenId,
     root: &UserAccount,
     nft: &ContractAccount<NftContract>,
     title: String,
@@ -107,7 +105,6 @@ pub fn helper_mint(
     call!(
         root,
         nft.nft_mint(
-            token_id,
             root.valid_account_id(),
             TokenMetadata {
                 title: Some(title),

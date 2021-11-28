@@ -33,6 +33,7 @@ near_sdk::setup_alloc!();
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     tokens: NonFungibleToken,
+    next_mint: u8,
     metadata: LazyOption<NFTContractMetadata>,
 }
 
@@ -52,7 +53,7 @@ impl Contract {
     /// Initializes the contract owned by `owner_id` with
     /// default metadata (for example purposes only).
     #[init]
-    pub fn new_default_meta(owner_id: ValidAccountId) -> Self {
+    pub fn new_default_meta(owner_id: ValidAccountId, first_mint: Option<u8>) -> Self {
         Self::new(
             owner_id,
             NFTContractMetadata {
@@ -64,11 +65,12 @@ impl Contract {
                 reference: None,
                 reference_hash: None,
             },
+            first_mint,
         )
     }
 
     #[init]
-    pub fn new(owner_id: ValidAccountId, metadata: NFTContractMetadata) -> Self {
+    pub fn new(owner_id: ValidAccountId, metadata: NFTContractMetadata, first_mint: Option<u8>) -> Self {
         assert!(!env::state_exists(), "Already initialized");
         metadata.assert_valid();
         Self {
@@ -79,6 +81,7 @@ impl Contract {
                 Some(StorageKey::Enumeration),
                 Some(StorageKey::Approval),
             ),
+            next_mint: first_mint.unwrap_or(0),
             metadata: LazyOption::new(StorageKey::Metadata, Some(&metadata)),
         }
     }
@@ -94,11 +97,11 @@ impl Contract {
     #[payable]
     pub fn nft_mint(
         &mut self,
-        token_id: TokenId,
         receiver_id: ValidAccountId,
         token_metadata: TokenMetadata,
     ) -> Token {
-        self.tokens.mint(token_id, receiver_id, Some(token_metadata))
+        self.next_mint += 1;
+        self.tokens.mint((self.next_mint - 1).to_string(), receiver_id, Some(token_metadata))
     }
 }
 
@@ -153,7 +156,7 @@ mod tests {
     fn test_new() {
         let mut context = get_context(accounts(1));
         testing_env!(context.build());
-        let contract = Contract::new_default_meta(accounts(1).into());
+        let contract = Contract::new_default_meta(accounts(1).into(), None);
         testing_env!(context.is_view(true).build());
         assert_eq!(contract.nft_token("1".to_string()), None);
     }
@@ -170,7 +173,7 @@ mod tests {
     fn test_mint() {
         let mut context = get_context(accounts(0));
         testing_env!(context.build());
-        let mut contract = Contract::new_default_meta(accounts(0).into());
+        let mut contract = Contract::new_default_meta(accounts(0).into(), None);
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -179,7 +182,7 @@ mod tests {
             .build());
 
         let token_id = "0".to_string();
-        let token = contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        let token = contract.nft_mint(accounts(0), sample_token_metadata());
         assert_eq!(token.token_id, token_id);
         assert_eq!(token.owner_id, accounts(0).to_string());
         assert_eq!(token.metadata.unwrap(), sample_token_metadata());
@@ -190,7 +193,7 @@ mod tests {
     fn test_transfer() {
         let mut context = get_context(accounts(0));
         testing_env!(context.build());
-        let mut contract = Contract::new_default_meta(accounts(0).into());
+        let mut contract = Contract::new_default_meta(accounts(0).into(), None);
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -198,7 +201,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.nft_mint(accounts(0), sample_token_metadata());
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -227,7 +230,7 @@ mod tests {
     fn test_approve() {
         let mut context = get_context(accounts(0));
         testing_env!(context.build());
-        let mut contract = Contract::new_default_meta(accounts(0).into());
+        let mut contract = Contract::new_default_meta(accounts(0).into(), None);
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -235,7 +238,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.nft_mint(accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
@@ -258,7 +261,7 @@ mod tests {
     fn test_revoke() {
         let mut context = get_context(accounts(0));
         testing_env!(context.build());
-        let mut contract = Contract::new_default_meta(accounts(0).into());
+        let mut contract = Contract::new_default_meta(accounts(0).into(), None);
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -266,7 +269,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.nft_mint(accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
@@ -296,7 +299,7 @@ mod tests {
     fn test_revoke_all() {
         let mut context = get_context(accounts(0));
         testing_env!(context.build());
-        let mut contract = Contract::new_default_meta(accounts(0).into());
+        let mut contract = Contract::new_default_meta(accounts(0).into(), None);
 
         testing_env!(context
             .storage_usage(env::storage_usage())
@@ -304,7 +307,7 @@ mod tests {
             .predecessor_account_id(accounts(0))
             .build());
         let token_id = "0".to_string();
-        contract.nft_mint(token_id.clone(), accounts(0), sample_token_metadata());
+        contract.nft_mint(accounts(0), sample_token_metadata());
 
         // alice approves bob
         testing_env!(context
