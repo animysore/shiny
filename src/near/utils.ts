@@ -3,7 +3,7 @@ import { Contract as ContractWithMethod } from '../models/Contract';
 import { WindowWithNEAR } from '../Window';
 import getConfig from './config'
 
-const nearConfig = getConfig(process.env.NODE_ENV || 'development')
+const nearConfig = getConfig('development')
 declare let window: WindowWithNEAR;
 
 // Initialize contract & set global variables

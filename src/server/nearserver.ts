@@ -4,7 +4,7 @@ import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { Contract as ContractWithMethods } from '../models/Contract';
 import getConfig from '../near/config';
 
-const nearConfig = getConfig(process.env.NODE_ENV || 'development')
+const nearConfig = getConfig('development')
 
 const keyStore = new InMemoryKeyStore();
 
