@@ -6,4 +6,5 @@ export declare class WindowWithNEAR extends Window {
   walletConnection: WalletConnection;
   accountId?: string;
   contract: Contract;
+  parseNearAmount: (amount?: string) => string | null;
 }

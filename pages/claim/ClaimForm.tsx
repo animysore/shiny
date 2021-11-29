@@ -21,7 +21,7 @@ export default function Claim(props: { claim: string }) {
         ) : (
           <Typography variant="body1">
             You must be logged in with a NEAR Wallet to claim this token.
-            If you don't have an account, you can create one by clicking the Connect Wallet button on the top.
+            No wallet? you can create one for free! Click the Connect Wallet button on the top.
           </Typography>
       )}
     </>

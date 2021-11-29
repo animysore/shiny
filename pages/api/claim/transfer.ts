@@ -1,4 +1,3 @@
-import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NearSDK } from '../../../src/server/nearserver';
 import redis from '../../../src/server/redis';
