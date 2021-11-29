@@ -36,6 +36,7 @@ export default async function share(req: NextApiRequest, res: NextApiResponse<an
       name: token.metadata.title,
       description: token.metadata.description,
       imageURL: token.metadata.media,
+      wallet: token.owner_id,
       link: url
     },
   });
