@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME ||'shiny-server'
+export const CONTRACT_NAME = process.env.NEXT_PUBLIC_CONTRACT_NAME ||'shiny-server'
 
 export default function getConfig(env: string) {
   switch (env) {

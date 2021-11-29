@@ -1,7 +1,10 @@
 import { connect, Contract, keyStores, WalletConnection, utils } from 'near-api-js'
+import { Contract as ContractWithMethod } from '../models/Contract';
+import { WindowWithNEAR } from '../Window';
 import getConfig from './config'
 
 const nearConfig = getConfig(process.env.NODE_ENV || 'development')
+declare let window: WindowWithNEAR;
 
 // Initialize contract & set global variables
 export async function initContract() {
@@ -10,7 +13,7 @@ export async function initContract() {
 
   // Initializing Wallet based Account. It can work with NEAR testnet wallet that
   // is hosted at https://wallet.testnet.near.org
-  window.walletConnection = new WalletConnection(near)
+  window.walletConnection = new WalletConnection(near, null)
 
   // Getting the Account ID. If still unauthorized, it's just empty string
   window.accountId = window.walletConnection.getAccountId()
@@ -18,11 +21,13 @@ export async function initContract() {
   // Initializing our contract APIs by contract name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['nft_metadata', 'nft_tokens'],
+    viewMethods: ['nft_metadata', 'nft_tokens', 'nft_tokens_for_owner'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['nft_mint', 'nft_transfer'],
-  })
+    changeMethods: ['nft_transfer', 'nft_approve'],
+  }) as ContractWithMethod;
   window.parseNearAmount = utils.format.parseNearAmount;
+
+  return { walletConnection: window.walletConnection, contract: window.contract, accountId: window.accountId }
 }
 
 export function logout() {

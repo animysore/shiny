@@ -5,11 +5,10 @@ import MuiLink from '@mui/material/Link';
 export default function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <MuiLink color="inherit" href="https://mui.com/">
-        Your Website
+      {'Made with 💙 by '}
+      <MuiLink color="inherit" href="https://animysore.com/">
+        Ani Mysore
       </MuiLink>{' '}
-      {new Date().getFullYear()}.
     </Typography>
   );
 }
