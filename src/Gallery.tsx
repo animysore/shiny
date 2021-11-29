@@ -20,7 +20,7 @@ export default function Gallery() {
     <>
       { accountId && (
         <>
-          <Typography variant="h5" gutterBottom> Gallery </Typography>
+          { nfts.length === 0 &&  <Typography variant="body1">No NFTs here 😢 </Typography> }
           <Grid container spacing={2}>
             {nfts.map(nft => (
               <Grid item key={nft.token_id}>

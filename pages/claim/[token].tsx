@@ -1,16 +1,12 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import Container from '@mui/material/Container';
 import { useRouter } from 'next/router';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import axios from 'axios';
 import { TokenMetadata } from '../../src/models/TokenMetadata';
-import Header from '../../src/components/Header';
 import NFTCard from '../../src/components/NFTCard';
-import { WithNear } from '../../src/near/WithNear';
 import ClaimForm from './ClaimForm';
 import { CircularProgress } from '@mui/material';
+import Layout from '../../src/components/Layout';
 
 export default function Claim() {
   const router = useRouter();
@@ -31,25 +27,19 @@ export default function Claim() {
   }, [id])
   
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <WithNear>
-          <Header />
-          <Typography variant="h4" component="h1" gutterBottom> Claim this NFT! </Typography>
-          { loading && <CircularProgress /> }
-          { tokenId && metadata && typeof(id) === 'string' && (
-            <>
-              <NFTCard
-                title={metadata?.title}
-                description={metadata?.description}
-                media={metadata?.media}
-                tokenId={tokenId}
-              />
-              <ClaimForm claim={id}/>
-            </>          
-          )}
-        </WithNear>
-      </Box>
-    </Container>
+    <Layout title="Shiny Claims" subtitle="Claim this NFT">
+      { loading && <CircularProgress /> }
+      { tokenId && metadata && typeof(id) === 'string' && (
+        <>
+          <NFTCard
+            title={metadata?.title}
+            description={metadata?.description}
+            media={metadata?.media}
+            tokenId={tokenId}
+          />
+          <ClaimForm claim={id}/>
+        </>          
+      )}
+    </Layout>
   );
 }

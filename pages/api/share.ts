@@ -14,7 +14,6 @@ type NFTShareRequest = {
  * Share NFT to an email address
  */
 
-const HOST = 'localhost:3000';
 
 export default async function share(req: NextApiRequest, res: NextApiResponse<any>) {
   console.log('share:', req.body);
@@ -28,13 +27,17 @@ export default async function share(req: NextApiRequest, res: NextApiResponse<an
     'metadata', JSON.stringify(token.metadata),
   );
   console.log(`Added claim ${claim_id} for token ${token_id} - ${token.metadata.title}`);
-  const url = `https://${HOST}/claim/${claim_id}`;
+  const url = `${req.headers.origin}/claim/${claim_id}`;
   sgMail.send({
     to,
     from: 'mail@animysore.com', // Change to your verified sender
-    subject: 'Look! A shiny NFT!',
-    text: `Claim this NFT generated on Shiny at ${url}`,
-    html: `Claim this NFT generated on Shiny at <strong> <a href="${url}"> ${url} </a> </strong>`,
+    templateId: 'd-c53a18c82d1646af914361dd3c0709ce',
+    dynamicTemplateData: {
+      name: token.metadata.title,
+      description: token.metadata.description,
+      imageURL: token.metadata.media,
+      link: url
+    },
   });
   res.status(200).json({ claim_id });
 }

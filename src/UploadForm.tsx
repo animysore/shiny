@@ -29,6 +29,9 @@ function UploadForm() {
         setMintState('minted');
         setToken(token);
         console.log(token);
+      }).catch((err) => {
+        alert('Error minting token: ' + err);
+        setMintState('unminted');
       });
     }
   }
@@ -61,7 +64,7 @@ function UploadForm() {
   }
 
   return (
-    <Box style={{ display: 'flex', flexDirection: 'column' }}>
+    <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
       { mintState !== 'minted'  ? (
         <form onSubmit={onFormSubmit}>
           <Box sx={{
@@ -113,7 +116,7 @@ function UploadForm() {
           </Box>
           <Box sx={{ display: 'flex' }}>
             <Button type="submit" variant="outlined" disabled={mintState !== 'unminted'}> Mint </Button>
-              <CircularProgress style={{ display: (mintState === 'minting') ? 'block': 'none' }}/>
+            <CircularProgress style={{ marginLeft: 10, display: (mintState === 'minting') ? 'block': 'none' }}/>
           </Box>
         </form>
       ) : (
@@ -124,7 +127,7 @@ function UploadForm() {
             media={token?.metadata.media}
             tokenId={token?.token_id}
           />
-          <Box sx={{ my: 7 }}>
+          <Box sx={{ my: 7, width: 330 }}>
             <Typography variant="h5"> Share this NFT </Typography>
             <form onSubmit={handleShare} style={{ display: 'flex' }}>
               <Input placeholder="Email" type="email" fullWidth={true} onChange={(e) => setEmail(e.target.value)} />

@@ -4,7 +4,7 @@ import MuiLink from '@mui/material/Link';
 
 export default function Copyright() {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
+    <Typography variant="body2" color="text.secondary" align="center" sx={{ my: 2 }}>
       {'Made with 💙 by '}
       <MuiLink color="inherit" href="https://animysore.com/">
         Ani Mysore
