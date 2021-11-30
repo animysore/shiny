@@ -15,7 +15,13 @@ export default async function mint(req: NextApiRequest, res: NextApiResponse<any
   const { contract, rootAccountId } = await NearSDK();
   const { claim, receiver_id } = req.body as NFTTransferRequest;
   // Load the token corresponding to the claim
-  const { token: token_id } = await redis.hgetall(`claim:${claim}`);
+  const token_id = await redis.get(`claim:${claim}`);
+  
+  if (token_id === null) {
+    res.status(404).json({ error: 'Claim not found' });
+    return;
+  }
+
   // Get latest information about token from contract
   const token = await contract.nft_token({ token_id });
   // Check that we have approval to transfer the token 

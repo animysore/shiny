@@ -1,21 +1,19 @@
 import * as React from 'react';
 import { useState } from 'react';
-import axios from 'axios';
 import { Button, Input, Box, Typography, CircularProgress } from '@mui/material';
 import { ShinyNFT } from './models/shinynft';
 import { Token } from './models/Token';
 import { useNEAR } from './near/WithNear';
 import NFTCard from './components/NFTCard';
 import { CONTRACT_NAME } from './near/config';
-import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import MintFAQ from './components/MintFAQ';
 
 function UploadForm() {
-  const { accountId, contract } = useNEAR();
+  const { accountId } = useNEAR();
   const [file, setFile] = useState<File | null>(null);
   const [imagePreviewURL, setimagePreviewURL] =  useState<string | null>(null);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
   const [mintState, setMintState] = useState<'unminted'|'minting'|'minted'>('unminted');
   const [token, setToken] = useState<Token | null>(null);
   const imageCSS = imagePreviewURL ? { background: `url(${imagePreviewURL})` } : {};
@@ -33,21 +31,6 @@ function UploadForm() {
         alert('Error minting token: ' + err);
         setMintState('unminted');
       });
-    }
-  }
-  const handleShare = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (token && contract) {
-      axios.post('/api/share', { token_id: token.token_id, email }).then(console.log);
-      setTimeout(() => contract.nft_approve({
-        args: {
-          token_id: token.token_id,
-          account_id: CONTRACT_NAME,
-        },
-        callbackUrl: `${window.origin}/view`,
-        gas: 300000000000000,
-        amount: parseNearAmount("0.0005") || "0" 
-        }), 100);
     }
   }
 
@@ -119,24 +102,20 @@ function UploadForm() {
             <CircularProgress style={{ marginLeft: 10, display: (mintState === 'minting') ? 'block': 'none' }}/>
           </Box>
         </form>
-      ) : (
+      ) : (token && (
         <>
+          <Typography variant="h5" sx={{ my: 2 }}> Fresh! </Typography>
           <NFTCard
-            title={token?.metadata.title}
-            description={token?.metadata.description}
-            media={token?.metadata.media}
-            tokenId={token?.token_id}
+            title={token.metadata.title}
+            description={token.metadata.description}
+            media={token.metadata.media}
+            tokenId={token.token_id}
+            approved={(CONTRACT_NAME in token.approved_account_ids)}
           />
-          <Box sx={{ my: 7, width: 330 }}>
-            <Typography variant="h5"> Share this NFT </Typography>
-            <form onSubmit={handleShare} style={{ display: 'flex' }}>
-              <Input placeholder="Email" type="email" fullWidth={true} onChange={(e) => setEmail(e.target.value)} />
-              <Button type="submit" style={{ marginLeft: 5 }} variant="outlined" color="primary">
-                Share
-              </Button>
-            </form>
+          <Box sx={{ my: 2 }}>
+            <MintFAQ />
           </Box>
-        </>
+        </>)
       )}
     </Box>
   );

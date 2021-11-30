@@ -19,7 +19,8 @@ export default function MyApp(props: MyAppProps) {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>My page</title>
+        <title>Shiny 🎁 - Mint and Share NFTs </title>
+        <meta name="description" content="Shiny is a simple NFT minting and sharing service." />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
       <ThemeProvider theme={theme}>

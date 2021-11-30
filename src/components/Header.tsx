@@ -10,7 +10,8 @@ export default function Header() {
         {accountId ? (
           <>
             <Link href='/' style={{ marginRight: 10 }}> Mint </Link>
-            <Link href='/view'> Collection </Link>
+            <Link href='/view' style={{ marginRight: 10 }}> Collection </Link>
+            <Link href='/faq'> FAQ</Link>
             <Chip style={{ marginLeft: 'auto' }} avatar={<Avatar>N</Avatar>} label={accountId} />
             <Button variant="text" onClick={() => logout()}> Logout </Button>
           </>

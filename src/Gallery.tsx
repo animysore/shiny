@@ -5,6 +5,7 @@ import { useNEAR } from './near/WithNear';
 import { Grid } from '@mui/material';
 import { Token } from './models/Token';
 import NFTCard from './components/NFTCard';
+import { CONTRACT_NAME } from './near/config';
 
 export default function Gallery() {
   const { accountId, contract } = useNEAR();
@@ -29,6 +30,7 @@ export default function Gallery() {
                   description={nft.metadata.description}
                   media={nft.metadata.media}
                   tokenId={nft.token_id}
+                  approved={(CONTRACT_NAME in nft.approved_account_ids)}
                 />
               </Grid>
             ))}

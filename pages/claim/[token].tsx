@@ -5,7 +5,7 @@ import axios from 'axios';
 import { TokenMetadata } from '../../src/models/TokenMetadata';
 import NFTCard from '../../src/components/NFTCard';
 import ClaimForm from './ClaimForm';
-import { CircularProgress } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import Layout from '../../src/components/Layout';
 
 export default function Claim() {
@@ -30,15 +30,21 @@ export default function Claim() {
     <Layout title="Shiny Claims" subtitle="Claim this NFT">
       { loading && <CircularProgress /> }
       { tokenId && metadata && typeof(id) === 'string' && (
-        <>
-          <NFTCard
-            title={metadata?.title}
-            description={metadata?.description}
-            media={metadata?.media}
-            tokenId={tokenId}
-          />
-          <ClaimForm claim={id}/>
-        </>          
+        <Box sx={{ display: 'flex', flexDirection: 'column', '& > :not(style)': { my: 3 } }}>
+          <div>
+            <NFTCard
+              title={metadata?.title}
+              description={metadata?.description}
+              media={metadata?.media}
+              tokenId={tokenId}
+              approved={false}
+              share={false}
+            />
+          </div>
+          <div>
+            <ClaimForm claim={id}/>
+          </div>
+        </Box>          
       )}
     </Layout>
   );

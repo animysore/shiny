@@ -5,7 +5,7 @@ import Copyright from '../Copyright';
 import { WithNear } from '../near/WithNear';
 import Header from '../components/Header';
 import theme from '../theme';
-import { Badge, Typography } from '@mui/material';
+import { Badge, Tooltip, Typography } from '@mui/material';
 
 export default function Layout(props: { title: string, subtitle: string, children: React.ReactNode }) {
   return (
@@ -15,7 +15,11 @@ export default function Layout(props: { title: string, subtitle: string, childre
         <Box sx={{ py: 4 }}>  
           <WithNear>
             <Header />
-            <Badge badgeContent="BETA" color="primary">
+            <Badge badgeContent={
+              <Tooltip title="Testnet only" placement="right">
+                <span>BETA</span>
+              </Tooltip>
+            } color="primary">
               <Typography variant="h2" component="h1" gutterBottom> {props.title} </Typography>
             </Badge>
             <Typography variant="h5" gutterBottom> {props.subtitle} </Typography>

@@ -7,7 +7,9 @@ export default async function view(
   res: NextApiResponse<any>
 ) {
   const id = req.query.id;
-  const {metadata: strmetadata, token} = await redis.hgetall(`claim:${id}`);
+  const token_id = await redis.get(`claim:${id}`);
+  const { metadata: strmetadata } = await redis.hgetall(`token:${token_id}`);
   const metadata: TokenMetadata = JSON.parse(strmetadata);
-  res.json({ token_id: token, metadata });
+  console.log('View claim for ', metadata)
+  res.json({ token_id, metadata });
 }

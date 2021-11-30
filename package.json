@@ -8,6 +8,7 @@
     "@emotion/react": "latest",
     "@emotion/server": "latest",
     "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.2.0",
     "@mui/material": "latest",
     "@sendgrid/mail": "^7.6.0",
     "@types/ioredis": "^4.28.1",
