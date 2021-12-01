@@ -32,6 +32,7 @@ export default async function share(req: NextApiRequest, res: NextApiResponse<Ge
     await redis.hset(
       `token:${token_id}`,
       'claim', claim_id,
+      'owner_id', token.owner_id,
       'metadata', JSON.stringify(token.metadata),
     );
     await redis.set(`claim:${claim_id}`, token_id);

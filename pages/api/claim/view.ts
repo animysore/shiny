@@ -17,8 +17,8 @@ export default async function view(
     return;
   }
 
-  const { metadata: strmetadata } = await redis.hgetall(`token:${token_id}`);
+  const { metadata: strmetadata, owner_id } = await redis.hgetall(`token:${token_id}`);
   const metadata: TokenMetadata = JSON.parse(strmetadata);
   console.log('View claim for ', metadata);
-  res.json({ token_id, metadata });
+  res.json({ token_id, metadata, owner_id });
 }

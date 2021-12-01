@@ -31,6 +31,7 @@ export declare namespace ShareClaim {
 export declare namespace ViewClaim {
   type Success = {
     token_id: string;
+    owner_id: string;
     metadata: TokenMetadata;
   };
   type Response = WithError<Success>;

@@ -31,11 +31,13 @@ export default async function mint(req: NextApiRequest, res: NextApiResponse<Tra
       redis.hdel(`claim:${claim}`);
       console.log('mint result:', result);
       res.status(200).json({ message: 'Success'});
-      return;
     }
     catch (err) {
       console.error(err);
       res.status(400).json({ error: 'Could not process request' });
+    }
+    finally {
+      return;
     }
   }
   res.status(403).json({ error: 'Not approved' })
