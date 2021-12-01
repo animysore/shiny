@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { AnalyticsBrowser } from '@segment/analytics-next';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Copyright from '../Copyright';
@@ -8,6 +9,12 @@ import theme from '../theme';
 import { Badge, Tooltip, Typography } from '@mui/material';
 
 export default function Layout(props: { title: string, subtitle: string, children: React.ReactNode }) {
+  const writeKey = process.env.NEXT_PUBLIC_SEGMENT_WRITEKEY || '';
+  
+  React.useEffect(() => {
+    AnalyticsBrowser.load({ writeKey })
+  }, [writeKey])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <div style={{ width: '100%', height: '10px', backgroundColor: theme.palette.primary.main }} />
