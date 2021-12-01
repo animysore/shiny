@@ -10,6 +10,7 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "^5.2.0",
     "@mui/material": "latest",
+    "@segment/analytics-next": "^1.31.2",
     "@sendgrid/mail": "^7.6.0",
     "@types/ioredis": "^4.28.1",
     "axios": "^0.24.0",
@@ -18,7 +19,7 @@
     "ioredis": "^4.28.1",
     "near-api-js": "^0.43.1",
     "next": "latest",
-    "nft.storage": "^4.0.1",
+    "nft.storage": "^5.0.0",
     "react": "latest",
     "react-dom": "latest",
     "uuid": "^8.3.2"
