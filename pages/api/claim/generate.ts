@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry } from '@sentry/nextjs';
 import { v4 as uuidv4 } from 'uuid';
 import { GenerateClaim } from '../../../src/models/api';
 import { NearSDK } from '../../../src/server/nearserver'
@@ -9,7 +10,7 @@ import redis from '../../../src/server/redis';
  */
 
 
-export default async function share(req: NextApiRequest, res: NextApiResponse<GenerateClaim.Response>) {
+async function share(req: NextApiRequest, res: NextApiResponse<GenerateClaim.Response>) {
   console.log('share:', req.body);
   const { contract, rootAccountId } = await NearSDK();
   const { token_id } = req.body as GenerateClaim.Request;
@@ -40,3 +41,5 @@ export default async function share(req: NextApiRequest, res: NextApiResponse<Ge
     res.status(200).json({ claim: claim_id });
   }
 }
+
+export default withSentry(share);

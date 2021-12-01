@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import { withSentry } from '@sentry/nextjs';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Mint } from '../../src/models/api';
 import { NearSDK } from '../../src/server/nearserver'
@@ -7,7 +8,7 @@ import { NearSDK } from '../../src/server/nearserver'
 /**
  * Call contract to mint NFT
  */
-export default async function mint(req: NextApiRequest, res: NextApiResponse<Mint.Response>) {
+async function mint(req: NextApiRequest, res: NextApiResponse<Mint.Response>) {
   console.log('Mint request', req.body);
   const { contract } = await NearSDK();
   const { receiver_id, token_metadata } = req.body as Mint.Request;
@@ -25,3 +26,5 @@ export default async function mint(req: NextApiRequest, res: NextApiResponse<Min
     res.status(400).json({ error: 'Could not mint token: ' + err});
   }
 }
+
+export default withSentry(mint);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { captureException } from '@sentry/nextjs';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { Alert, Button, CircularProgress } from '@mui/material';
@@ -17,6 +18,7 @@ export default function Claim(props: { claim: string }) {
         console.log('Claimed');
       })
       .catch((err) => {
+        captureException(err);
         setClaimState('failed');
         console.error(err);
       });

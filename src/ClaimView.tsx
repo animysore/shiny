@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { captureException } from '@sentry/nextjs';
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { TokenMetadata } from './models/TokenMetadata';
 import NFTCard from './components/NFTCard';
@@ -25,7 +26,7 @@ export default function ClaimView({ claimId }: { claimId: string }) {
         setOwner(data.owner_id);
         setTokenMetadata(data.metadata);
       })
-      .catch(console.error)
+      .catch(captureException)
       .finally(() => setLoading(false));
   }, [claimId])
   

@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry } from '@sentry/nextjs';
 import { TransferClaim } from '../../../src/models/api';
 import { NearSDK } from '../../../src/server/nearserver';
 import redis from '../../../src/server/redis';
@@ -6,7 +7,7 @@ import redis from '../../../src/server/redis';
 /**
  * Call contract to transfer NFT included in claim
  */
-export default async function mint(req: NextApiRequest, res: NextApiResponse<TransferClaim.Response>) {
+async function transfer(req: NextApiRequest, res: NextApiResponse<TransferClaim.Response>) {
   console.log('mint', req.body);
   const { contract, rootAccountId } = await NearSDK();
   const { claim, receiver_id } = req.body as TransferClaim.Request;
@@ -42,3 +43,5 @@ export default async function mint(req: NextApiRequest, res: NextApiResponse<Tra
   }
   res.status(403).json({ error: 'Not approved' })
 }
+
+export default withSentry(transfer);

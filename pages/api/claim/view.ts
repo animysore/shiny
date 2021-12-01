@@ -1,9 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry } from '@sentry/nextjs';
 import { ViewClaim } from '../../../src/models/api';
 import { TokenMetadata } from '../../../src/models/TokenMetadata';
 import redis from '../../../src/server/redis';
 
-export default async function view(
+async function view(
   req: NextApiRequest,
   res: NextApiResponse<ViewClaim.Response>
 ) {
@@ -22,3 +23,5 @@ export default async function view(
   console.log('View claim for ', metadata);
   res.json({ token_id, metadata, owner_id });
 }
+
+export default withSentry(view);

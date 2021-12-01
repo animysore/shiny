@@ -1,5 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { withSentry } from '@sentry/nextjs';
 import { ShareClaim } from '../../../src/models/api';
 import { NearSDK } from '../../../src/server/nearserver'
 import redis from '../../../src/server/redis';
@@ -8,7 +9,7 @@ import sgMail from '../../../src/server/sendgrid';
 /**
  * Share NFT to an email address
  */
-export default async function share(req: NextApiRequest, res: NextApiResponse<ShareClaim.Response>) {
+async function share(req: NextApiRequest, res: NextApiResponse<ShareClaim.Response>) {
   console.log('share:', req.body);
   const { contract, rootAccountId } = await NearSDK();
   const { token_id, email: to } = req.body as ShareClaim.Request;
@@ -36,3 +37,5 @@ export default async function share(req: NextApiRequest, res: NextApiResponse<Sh
   });
   res.status(200).json({ claim });
 }
+
+export default withSentry(share);

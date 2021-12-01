@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { captureException } from '@sentry/nextjs';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -31,7 +32,7 @@ export default function Share(props: ShareProps) {
     if (approved) {
       axios.post<{}, Ax<GenerateClaim.Success>, GenerateClaim.Request>('/api/claim/generate', { token_id: tokenId })
         .then((res) => setClaimId(res.data.claim))
-        .catch(console.error);
+        .catch(captureException);
     }
   }, [open, tokenId, approved]);
 
@@ -55,7 +56,8 @@ export default function Share(props: ShareProps) {
         alert('Successfully shared token claim with ' + email);
       })
       .catch((err) => {
-        alert('Could not share token claim with ' + email); 
+        alert('Could not share token claim with ' + email);
+        captureException(err);
         console.error(err);
       });
   }

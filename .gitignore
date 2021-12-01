@@ -40,3 +40,5 @@ yarn-error.log*
 *.wasm
 **/Cargo.lock
 /neardev
+# Sentry
+.sentryclirc

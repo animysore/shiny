@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { captureException } from '@sentry/nextjs';
 import { Button, Input, Box, Typography, CircularProgress } from '@mui/material';
 import { ShinyNFT } from './models/shinynft';
 import { Token } from './models/Token';
@@ -29,6 +30,7 @@ function UploadForm() {
         console.log(token);
       }).catch((err) => {
         alert('Error minting token: ' + err);
+        captureException(err);
         setMintState('unminted');
       });
     }
