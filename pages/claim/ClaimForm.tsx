@@ -3,12 +3,13 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import { Button } from '@mui/material';
 import { useNEAR } from '../../src/near/WithNear';
+import { TransferClaim } from '../../src/models/api';
 
 export default function Claim(props: { claim: string }) {
   const { accountId } = useNEAR();
 
   const claimToken = () => {
-    axios.post(`/api/claim/transfer`, { claim: props.claim, receiver_id: accountId })
+    axios.post<TransferClaim.Request, TransferClaim.Success>(`/api/claim/transfer`, { claim: props.claim, receiver_id: accountId })
       .then(() => {
         console.log('Claimed');
       })

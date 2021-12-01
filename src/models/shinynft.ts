@@ -1,8 +1,8 @@
 import { client } from '../services/nftstorage';
-import axios from 'axios';
+import axios, { AxiosResponse as Ax } from 'axios';
 import { readFileAndComputeHash } from '../services/imagehash';
 import { TokenMetadata } from './TokenMetadata';
-import { Token } from './Token';
+import { Mint } from './api';
 
 export class ShinyNFT {
   id?: string;
@@ -35,7 +35,7 @@ export class ShinyNFT {
       issued_at: new Date().toISOString()
     };
     console.log('metadata', metadata);
-    const mintresult = await axios.post<Token, any>('/api/mint', {  token_id: this.id, receiver_id, token_metadata: metadata });
+    const mintresult = await axios.post<{}, Ax<Mint.Success>, Mint.Request>('/api/mint', { receiver_id, token_metadata: metadata });
     this.id = mintresult.data.token_id;
     console.log('mint result', mintresult);
     return mintresult.data;

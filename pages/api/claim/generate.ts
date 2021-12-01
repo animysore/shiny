@@ -1,21 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 as uuidv4 } from 'uuid';
+import { GenerateClaim } from '../../../src/models/api';
 import { NearSDK } from '../../../src/server/nearserver'
 import redis from '../../../src/server/redis';
-
-type MakeClaimRequest = {
-  token_id: string;
-}
 
 /**
  * Share NFT to an email address
  */
 
 
-export default async function share(req: NextApiRequest, res: NextApiResponse<{ claim: string }|{ error: string }>) {
+export default async function share(req: NextApiRequest, res: NextApiResponse<GenerateClaim.Response>) {
   console.log('share:', req.body);
   const { contract, rootAccountId } = await NearSDK();
-  const { token_id } = req.body as MakeClaimRequest;
+  const { token_id } = req.body as GenerateClaim.Request;
   const exists = await redis.hexists(`token:${token_id}`, 'claim');
 
   if (exists) {

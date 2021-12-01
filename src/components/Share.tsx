@@ -5,12 +5,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
-import axios from 'axios';
+import axios, { AxiosResponse as Ax } from 'axios';
 import { useNEAR } from '../near/WithNear';
 import { CONTRACT_NAME } from '../near/config';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import PaymentHeadsUp from './PaymentHeadsUp';
 import { Avatar, Typography, Input, Alert } from '@mui/material';
+import { GenerateClaim, ShareClaim } from '../models/api';
 
 export interface ShareProps {
   keepMounted: boolean;
@@ -28,7 +29,7 @@ export default function Share(props: ShareProps) {
 
   React.useEffect(() => {
     if (approved) {
-      axios.post<{ claim:string }>('/api/claim/generate', { token_id: tokenId })
+      axios.post<{}, Ax<GenerateClaim.Success>, GenerateClaim.Request>('/api/claim/generate', { token_id: tokenId })
         .then((res) => setClaimId(res.data.claim))
         .catch(console.error);
     }
@@ -49,7 +50,7 @@ export default function Share(props: ShareProps) {
   }
 
   const handleShare = () => {
-    axios.post<{ claim:string }>('/api/claim/share', { token_id: tokenId, email })
+    axios.post<{}, Ax<ShareClaim.Success>, ShareClaim.Request>('/api/claim/share', { token_id: tokenId, email })
       .then(() => {
         alert('Successfully shared token claim with ' + email);
       })

@@ -1,21 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { NearSDK } from '../../src/server/nearserver'
-import redis from '../../src/server/redis';
-import sgMail from '../../src/server/sendgrid';
-
-type NFTShareRequest = {
-  token_id: string;
-  email: string;
-}
+import { ShareClaim } from '../../../src/models/api';
+import { NearSDK } from '../../../src/server/nearserver'
+import redis from '../../../src/server/redis';
+import sgMail from '../../../src/server/sendgrid';
 
 /**
  * Share NFT to an email address
  */
-export default async function share(req: NextApiRequest, res: NextApiResponse<any>) {
+export default async function share(req: NextApiRequest, res: NextApiResponse<ShareClaim.Response>) {
   console.log('share:', req.body);
   const { contract, rootAccountId } = await NearSDK();
-  const { token_id, email: to } = req.body as NFTShareRequest;
+  const { token_id, email: to } = req.body as ShareClaim.Request;
   const token = await contract.nft_token({ token_id });
   
   if (!(rootAccountId in token.approved_account_ids)) {

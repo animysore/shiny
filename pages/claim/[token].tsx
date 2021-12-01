@@ -7,6 +7,7 @@ import NFTCard from '../../src/components/NFTCard';
 import ClaimForm from './ClaimForm';
 import { Box, CircularProgress } from '@mui/material';
 import Layout from '../../src/components/Layout';
+import { ViewClaim } from '../../src/models/api';
 
 export default function Claim() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function Claim() {
   
   useEffect(() => {
     if (!id) return;
-    axios.get<{ token_id:string, metadata: TokenMetadata }>(`/api/claim/view?id=${id}`)
+    axios.get<ViewClaim.Success>(`/api/claim/view?id=${id}`)
       .then(claim => {
         console.log(claim.data);
         setLoading(false);
