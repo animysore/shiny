@@ -13,6 +13,9 @@ export default function Layout(props: { title: string, subtitle: string, childre
   
   React.useEffect(() => {
     AnalyticsBrowser.load({ writeKey })
+      .then(([analytics]) => {
+        analytics.page();
+      });
   }, [writeKey])
 
   return (
