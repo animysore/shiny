@@ -19,9 +19,11 @@ export default function MyApp(props: MyAppProps) {
   return (
     <CacheProvider value={emotionCache}>
       <Head>
-        <title>Shiny 🎁 - Mint and Share NFTs </title>
-        <meta name="description" content="Shiny is a simple NFT minting and sharing service." />
+        <title>Shiny | Mint and Share NFTs 🎁 </title>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
+        <meta name="description" content="Shiny is a simple NFT minting and sharing service." />
+        <link rel="icon" type="image/png" sizes="16x16"href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32"href="/favicon-32x32.png" />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
